@@ -7,6 +7,9 @@ Class {
 	#instVars : [
 		'kind'
 	],
+	#pools : [
+		'CoalConstants'
+	],
 	#category : #'CoalSerialization-Core-Metamodel'
 }
 
@@ -20,4 +23,14 @@ CoalTypeDescriptor >> kind [
 CoalTypeDescriptor >> kind: anObject [
 
 	kind := anObject
+]
+
+{ #category : #'reading-writing' }
+CoalTypeDescriptor >> readFieldWith: readStream [
+	self subclassResponsibility
+]
+
+{ #category : #'reading-writing' }
+CoalTypeDescriptor >> skipFieldWith: readStream [
+	self subclassResponsibility
 ]

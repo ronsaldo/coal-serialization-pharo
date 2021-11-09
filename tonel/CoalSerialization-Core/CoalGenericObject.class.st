@@ -1,33 +1,8 @@
+"
+I am a generic coal object. I am used for inspecting arbitrary coal serialized data.
+"
 Class {
 	#name : #CoalGenericObject,
-	#superclass : #Object,
-	#instVars : [
-		'type',
-		'slots'
-	],
-	#category : #'CoalSerialization-Core-Metamodel'
+	#superclass : #CoalGenericAggregate,
+	#category : #'CoalSerialization-Core-Materialization'
 }
-
-{ #category : #accessing }
-CoalGenericObject >> slots [
-
-	^ slots
-]
-
-{ #category : #accessing }
-CoalGenericObject >> slots: anObject [
-
-	slots := anObject
-]
-
-{ #category : #accessing }
-CoalGenericObject >> type [
-
-	^ type
-]
-
-{ #category : #accessing }
-CoalGenericObject >> type: anObject [
-
-	type := anObject
-]
