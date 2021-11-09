@@ -15,15 +15,11 @@ CoalMaterializationTypeSolver >> newInstanceForCluster: clusterType [
 { #category : #'reading-writing' }
 CoalMaterializationTypeSolver >> readInstance: instance withType: clusterType stream: readStream [
 	| slots destIndex|
-	destIndex := 1.
-	clusterType superType ifNotNil: [ :st |
-		self readInstance: instance withType: st stream: readStream.
-		destIndex := st totalSlotCount.
-	].
-
 	slots := instance slots.
-	clusterType fields do: [ :field |
-		slots at: destIndex put: (field encoding readFieldWith: readStream)
+	destIndex := 1.
+	clusterType allFieldsDo:  [ :field |
+		slots at: destIndex put: (field encoding readFieldWith: readStream).
+		destIndex := destIndex + 1
 	].
 ]
 

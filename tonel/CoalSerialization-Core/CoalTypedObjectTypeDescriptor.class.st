@@ -1,3 +1,6 @@
+"
+I am a type descriptor for a typed object reference.
+"
 Class {
 	#name : #CoalTypedObjectTypeDescriptor,
 	#superclass : #CoalTypeDescriptor,
@@ -17,4 +20,14 @@ CoalTypedObjectTypeDescriptor >> objectType [
 CoalTypedObjectTypeDescriptor >> objectType: anObject [
 
 	objectType := anObject
+]
+
+{ #category : #'reading-writing' }
+CoalTypedObjectTypeDescriptor >> readFieldWith: readStream [
+	^ readStream nextInstanceReference
+]
+
+{ #category : #'reading-writing' }
+CoalTypedObjectTypeDescriptor >> skipFieldWith: readStream [
+	readStream skip: 4
 ]

@@ -1,3 +1,6 @@
+"
+I am a coal aggregate type. An aggregate type holds a list of sequentially serialized fields.
+"
 Class {
 	#name : #CoalAggregateType,
 	#superclass : #CoalType,

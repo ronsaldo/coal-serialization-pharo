@@ -1,3 +1,6 @@
+"
+I describe a field in a coal aggregate type.
+"
 Class {
 	#name : #CoalFieldDescription,
 	#superclass : #Object,

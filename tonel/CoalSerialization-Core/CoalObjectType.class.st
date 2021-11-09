@@ -1,3 +1,6 @@
+"
+I represent the type for a heap allocated and potentially cyclic object with fields. 
+"
 Class {
 	#name : #CoalObjectType,
 	#superclass : #CoalAggregateType,

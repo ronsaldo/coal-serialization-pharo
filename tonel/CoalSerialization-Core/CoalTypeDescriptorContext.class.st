@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'valueTypes',
 		'clusterTypes',
-		'primitiveTypeDescriptors'
+		'primitiveTypeDescriptors',
+		'typeDescriptorCache'
 	],
 	#classVars : [
 		'TypeDescriptorKindParseSelectors'
@@ -17,25 +18,25 @@ Class {
 
 { #category : #initialization }
 CoalTypeDescriptorContext class >> initialize [
-	TypeDescriptorKindParseSelectors := Array new: 256 withAll: #parseUnsupportedKind:.
+	TypeDescriptorKindParseSelectors := Array new: 256 withAll: #parseUnsupportedKind:with:.
 	
 	1 to: PrimitiveTypeDescriptorCount do: [ :i |
-		TypeDescriptorKindParseSelectors at: i put: #parsePrimitiveDescriptorKind:
+		TypeDescriptorKindParseSelectors at: i put: #parsePrimitiveDescriptorKind:with:
 	].
 
 	{
-		TypeDescriptorKind_Struct . #parseStructureTypeDescriptorKind:.
-		TypeDescriptorKind_TypedObject . #parseTypedObjectTypeDescriptorKind:.
-		TypeDescriptorKind_FixedArray . #parseFixedArrayTypeDescriptorKind:.
-		TypeDescriptorKind_Array8 . #parseArray8TypeDescriptorKind:.
-		TypeDescriptorKind_Array16 . #parseArray16TypeDescriptorKind:.
-		TypeDescriptorKind_Array32 . #parseArray32TypeDescriptorKind:.
-		TypeDescriptorKind_Set8 . #parseSet8TypeDescriptorKind:.
-		TypeDescriptorKind_Set16 . #parseSet16TypeDescriptorKind:.
-		TypeDescriptorKind_Set32 . #parseSet32TypeDescriptorKind:.
-		TypeDescriptorKind_Map8 . #parseMap8TypeDescriptorKind:.
-		TypeDescriptorKind_Map16 . #parseMap16TypeDescriptorKind:.
-		TypeDescriptorKind_Map32 . #parseMap32TypeDescriptorKind:.
+		TypeDescriptorKind_Struct . #parseStructureTypeDescriptorKind:with:.
+		TypeDescriptorKind_TypedObject . #parseTypedObjectTypeDescriptorKind:with:.
+		TypeDescriptorKind_FixedArray . #parseFixedArrayTypeDescriptorKind:with:.
+		TypeDescriptorKind_Array8 . #parseArrayTypeDescriptorKind:with:.
+		TypeDescriptorKind_Array16 . #parseArrayTypeDescriptorKind:with:.
+		TypeDescriptorKind_Array32 . #parseArrayTypeDescriptorKind:with:.
+		TypeDescriptorKind_Set8 . #parseSetTypeDescriptorKind:with:.
+		TypeDescriptorKind_Set16 . #parseSetTypeDescriptorKind:with:.
+		TypeDescriptorKind_Set32 . #parseSetTypeDescriptorKind:with:.
+		TypeDescriptorKind_Map8 . #parseMapTypeDescriptorKind:with:.
+		TypeDescriptorKind_Map16 . #parseMapTypeDescriptorKind:with:.
+		TypeDescriptorKind_Map32 . #parseMapTypeDescriptorKind:with:.
 	} pairsDo: [ :kind :selector |
 		TypeDescriptorKindParseSelectors at: kind + 1 put: selector
 	]
@@ -57,62 +58,65 @@ CoalTypeDescriptorContext >> initialize [
 	valueTypes := OrderedCollection new.
 	clusterTypes := OrderedCollection new.
 	primitiveTypeDescriptors := Array new: PrimitiveTypeDescriptorCount.
+	typeDescriptorCache := Dictionary new.
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseArray16TypeDescriptorKind: kind [
-	self halt
+CoalTypeDescriptorContext >> parseArrayTypeDescriptorKind: kind with: readStream [
+	| elementType |
+	elementType := self readNextTypeDescriptorWith: readStream.
+	^ typeDescriptorCache at: { CoalArrayTypeDescriptor . kind . elementType } ifAbsentPut: [ 
+		CoalArrayTypeDescriptor new
+			kind: kind;
+			elementType: elementType;
+			yourself
+	]
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseArray32TypeDescriptorKind: kind [
-	self halt
+CoalTypeDescriptorContext >> parseFixedArrayTypeDescriptorKind: kind with: readStream [
+	| elementType size |
+	size := readStream nextUInt32.
+	elementType := self readNextTypeDescriptorWith: readStream.
+	^ typeDescriptorCache at: { CoalFixedArrayTypeDescriptor . kind . elementType } ifAbsentPut: [ 
+		CoalFixedArrayTypeDescriptor new
+			kind: kind;
+			size: size;
+			elementType: elementType;
+			yourself
+	]
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseArray8TypeDescriptorKind: kind [
-	self halt
+CoalTypeDescriptorContext >> parseMapTypeDescriptorKind: kind with: readStream [
+	| keyType valueType |
+	keyType := self readNextTypeDescriptorWith: readStream.
+	valueType := self readNextTypeDescriptorWith: readStream.
+	^ typeDescriptorCache at: { CoalMapTypeDescriptor . kind . keyType . valueType } ifAbsentPut: [ 
+		CoalMapTypeDescriptor new
+			kind: kind;
+			keyType: keyType;
+			valueType: valueType;
+			yourself
+	]
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseFixedArrayTypeDescriptorKind: kind [
-	self halt
-]
-
-{ #category : #parsing }
-CoalTypeDescriptorContext >> parseMap16TypeDescriptorKind: kind [
-	self halt
-]
-
-{ #category : #parsing }
-CoalTypeDescriptorContext >> parseMap32TypeDescriptorKind: kind [
-	self halt
-]
-
-{ #category : #parsing }
-CoalTypeDescriptorContext >> parseMap8TypeDescriptorKind: kind [
-	self halt
-]
-
-{ #category : #parsing }
-CoalTypeDescriptorContext >> parsePrimitiveDescriptorKind: kind [
+CoalTypeDescriptorContext >> parsePrimitiveDescriptorKind: kind with: readStream [
 	(primitiveTypeDescriptors at: kind + 1) ifNotNil: [ :found | ^ found ].
 	^ primitiveTypeDescriptors at: kind + 1 put: (CoalPrimitiveTypeDescriptor new kind: kind; yourself)
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseSet16TypeDescriptorKind: kind [
-	self halt
-]
-
-{ #category : #parsing }
-CoalTypeDescriptorContext >> parseSet32TypeDescriptorKind: kind [
-	self halt
-]
-
-{ #category : #parsing }
-CoalTypeDescriptorContext >> parseSet8TypeDescriptorKind: kind [
-	self halt
+CoalTypeDescriptorContext >> parseSetTypeDescriptorKind: kind with: readStream [
+	| elementType |
+	elementType := self readNextTypeDescriptorWith: readStream.
+	^ typeDescriptorCache at: { CoalSetTypeDescriptor . kind . elementType } ifAbsentPut: [ 
+		CoalSetTypeDescriptor new
+			kind: kind;
+			elementType: elementType;
+			yourself
+	]
 ]
 
 { #category : #parsing }
@@ -126,13 +130,13 @@ CoalTypeDescriptorContext >> parseTypedObjectTypeDescriptorKind: kind [
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseUnsupportedKind: kind [
+CoalTypeDescriptorContext >> parseUnsupportedKind: kind with: readStream [
 	self error: 'Unsupported type descriptor kind.'.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parsing }
 CoalTypeDescriptorContext >> readNextTypeDescriptorWith: readStream [
 	| kind |
 	kind := readStream nextUInt8.
-	^ self perform: (TypeDescriptorKindParseSelectors at: kind + 1) with: kind
+	^ self perform: (TypeDescriptorKindParseSelectors at: kind + 1) with: kind with: readStream
 ]

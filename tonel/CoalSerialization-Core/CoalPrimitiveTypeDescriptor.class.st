@@ -1,3 +1,6 @@
+"
+I am a primitive type descriptor.
+"
 Class {
 	#name : #CoalPrimitiveTypeDescriptor,
 	#superclass : #CoalTypeDescriptor,

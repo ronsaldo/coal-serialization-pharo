@@ -1,3 +1,6 @@
+"
+I represent a specific coal type in a given serialization/materialization context.
+"
 Class {
 	#name : #CoalType,
 	#superclass : #Object,
