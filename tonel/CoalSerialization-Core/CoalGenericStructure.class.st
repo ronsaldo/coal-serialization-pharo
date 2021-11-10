@@ -6,3 +6,10 @@ Class {
 	#superclass : #CoalGenericAggregate,
 	#category : #'CoalSerialization-Core-Materialization'
 }
+
+{ #category : #printing }
+CoalGenericStructure >> printOn: aStream [
+	super printOn: aStream.
+	(type isNil or: [slots isNil]) ifTrue: [ ^ self ].
+	self asFieldNameValueAssociationList printOn: aStream
+]

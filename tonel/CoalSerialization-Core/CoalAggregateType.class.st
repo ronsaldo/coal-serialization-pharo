@@ -16,7 +16,7 @@ CoalAggregateType >> allFieldsDo: aBlock [
 	fields do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CoalAggregateType >> fieldToSlotIndexDictionary [
 	| index |
 	fieldToSlotIndexDictionary ifNotNil: [ ^ fieldToSlotIndexDictionary ].
@@ -41,7 +41,7 @@ CoalAggregateType >> fields: anObject [
 	fields := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CoalAggregateType >> slotOfFieldNamed: fieldName [
 	^ self fieldToSlotIndexDictionary at: fieldName
 ]

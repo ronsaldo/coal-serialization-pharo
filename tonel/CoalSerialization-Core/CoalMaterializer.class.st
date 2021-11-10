@@ -147,8 +147,7 @@ CoalMaterializer >> parseHeaderAndReadBlob [
 	blobSize := readStream nextUInt32.
 	valueTypeCount := readStream nextUInt32.
 	clusterCount := readStream nextUInt32.
-	objectCount := readStream nextUInt32.	
-
+	objectCount := readStream nextUInt32.
 	readStream binaryBlob: (readStream next: blobSize).
 ]
 

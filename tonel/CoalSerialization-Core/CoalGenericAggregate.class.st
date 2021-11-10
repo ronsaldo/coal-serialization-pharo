@@ -11,6 +11,18 @@ Class {
 	#category : #'CoalSerialization-Core-Materialization'
 }
 
+{ #category : #converting }
+CoalGenericAggregate >> asFieldNameValueAssociationList [
+	| result slotIndex |
+	result := Array new: slots size.
+	slotIndex := 1.
+	type allFieldsDo: [ :fieldDescription |
+		result at: slotIndex put: (Association key: fieldDescription name value: (slots at: slotIndex)).
+		slotIndex := slotIndex + 1
+	].
+	^ result
+]
+
 { #category : #accessing }
 CoalGenericAggregate >> at: fieldName [
 	^ slots at: (type slotOfFieldNamed: fieldName)

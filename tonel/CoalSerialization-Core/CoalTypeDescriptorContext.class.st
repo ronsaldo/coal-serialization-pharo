@@ -120,8 +120,16 @@ CoalTypeDescriptorContext >> parseSetTypeDescriptorKind: kind with: readStream [
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseStructureTypeDescriptorKind: kind [
-	self halt
+CoalTypeDescriptorContext >> parseStructureTypeDescriptorKind: kind with: readStream [
+	| structureType |
+	structureType := valueTypes at: readStream nextUInt32 + 1.
+	^ typeDescriptorCache at: { CoalStructureTypeDescriptor . kind . structureType } ifAbsentPut: [ 
+		CoalStructureTypeDescriptor new
+			kind: kind;
+			structureType: structureType;
+			yourself
+	]
+	
 ]
 
 { #category : #parsing }
