@@ -6,3 +6,10 @@ Class {
 	#superclass : #CoalGenericAggregate,
 	#category : #'CoalSerialization-Core-Materialization'
 }
+
+{ #category : #converting }
+CoalGenericObject >> asCoalGenericObjectForPrinting [
+	^ type
+		ifNotNil: [ 'A ', type name , ' reference' ]
+		ifNil: [ 'Coal Object Reference' ]
+]

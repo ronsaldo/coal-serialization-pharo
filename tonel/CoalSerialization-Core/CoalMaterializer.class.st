@@ -38,7 +38,7 @@ CoalMaterializer >> parse [
 		parseTrailer
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseClusterInstances [
 	| destIndex |
 	instances := Array new: objectCount.
@@ -71,7 +71,7 @@ CoalMaterializer >> parseClusterInstances [
 
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseClusterTypeDescriptors [
 	clusterTypes := OrderedCollection new.
 	
@@ -103,7 +103,7 @@ CoalMaterializer >> parseClusterTypeDescriptors [
 
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseData: aByteArrayOrReadStream [
 	^ aByteArrayOrReadStream coalReadStreamDo: [ :theReadStream |
 		self readStream: theReadStream.
@@ -111,7 +111,7 @@ CoalMaterializer >> parseData: aByteArrayOrReadStream [
 	]
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseFieldDescription [
 	^ CoalFieldDescription new
 		name: readStream nextUTF8_32_16;
@@ -119,13 +119,13 @@ CoalMaterializer >> parseFieldDescription [
 		yourself
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseGenericData: aByteArrayOrStream [
 	^ self setupForGenericData;
 		parseData: aByteArrayOrStream
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseHeaderAndReadBlob [
 	| blobSize magicNumber versionMajor versionMinor reserved |
 	magicNumber := readStream nextUInt32.
@@ -151,7 +151,7 @@ CoalMaterializer >> parseHeaderAndReadBlob [
 	readStream binaryBlob: (readStream next: blobSize).
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseTrailer [
 	| rootObjectIndex |
 	rootObjectIndex := readStream nextUInt32.
@@ -159,7 +159,7 @@ CoalMaterializer >> parseTrailer [
 	^ instances at: rootObjectIndex
 ]
 
-{ #category : #parsing }
+{ #category : #'private - parsing' }
 CoalMaterializer >> parseValueTypeDescriptors [
 	typeDescriptorContext := CoalTypeDescriptorContext new.
 	valueTypes := OrderedCollection new.
@@ -192,12 +192,12 @@ CoalMaterializer >> readStream: aStream [
 	readStream := aStream asCoalReadStream
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #setup }
 CoalMaterializer >> setupForGenericData [
 	typeSolver := CoalGenericObjectMaterializationTypeSolver new.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - parsing' }
 CoalMaterializer >> validateAndResolveTypes [
 	valueTypes do: [ :each |
 		typeSolver solveStructureType: each; solveTypeFields: each.

@@ -24,11 +24,14 @@ CoalArrayTypeDescriptor >> elementType: anObject [
 
 { #category : #'reading-writing' }
 CoalArrayTypeDescriptor >> readFieldWith: readStream [
-	| size |
+	| size result |
 	size := self readSizeWith: readStream.
-	^ (1 to: size) collect: [ :i |
-		elementType readFieldWith: readStream
-	]
+	result := OrderedCollection new: size.
+	1 to: size do: [ :i |
+		result add: (elementType readFieldWith: readStream)
+	].
+	^ result.
+
 ]
 
 { #category : #'reading-writing' }

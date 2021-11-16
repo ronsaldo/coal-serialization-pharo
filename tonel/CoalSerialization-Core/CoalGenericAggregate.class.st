@@ -23,9 +23,23 @@ CoalGenericAggregate >> asFieldNameValueAssociationList [
 	^ result
 ]
 
+{ #category : #converting }
+CoalGenericAggregate >> asFieldNameValueAssociationListForPrinting [
+	^ self asFieldNameValueAssociationList collect: [ :each |
+		each key -> each value asCoalGenericObjectForPrinting
+	]
+]
+
 { #category : #accessing }
 CoalGenericAggregate >> at: fieldName [
 	^ slots at: (type slotOfFieldNamed: fieldName)
+]
+
+{ #category : #printing }
+CoalGenericAggregate >> printOn: aStream [
+	super printOn: aStream.
+	(type isNil or: [slots isNil]) ifTrue: [ ^ self ].
+	self asFieldNameValueAssociationListForPrinting printOn: aStream
 ]
 
 { #category : #accessing }

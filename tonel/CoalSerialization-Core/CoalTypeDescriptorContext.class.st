@@ -133,8 +133,15 @@ CoalTypeDescriptorContext >> parseStructureTypeDescriptorKind: kind with: readSt
 ]
 
 { #category : #parsing }
-CoalTypeDescriptorContext >> parseTypedObjectTypeDescriptorKind: kind [
-	self halt
+CoalTypeDescriptorContext >> parseTypedObjectTypeDescriptorKind: kind with: readStream [
+	| objectType |
+	objectType := clusterTypes at: readStream nextUInt32 + 1.
+	^ typeDescriptorCache at: { CoalTypedObjectTypeDescriptor . kind . objectType } ifAbsentPut: [ 
+		CoalTypedObjectTypeDescriptor new
+			kind: kind;
+			objectType: objectType;
+			yourself
+	]
 ]
 
 { #category : #parsing }
