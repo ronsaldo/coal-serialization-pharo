@@ -13,6 +13,7 @@ BaselineOfCoalSerialization >> baseline: spec [
 	spec for: #common do: [ 
 			spec
 				package: #'CoalSerialization-Core';
-				package: #'CoalSerialization-Core-Tests' with: [ spec requires: #'CoalSerialization-Core' ]
+				package: #'CoalSerialization-Core-Tests' with: [ spec requires: #'CoalSerialization-Core' ];
+				package: #'CoalSerialization-Tools' with: [ spec requires: #'CoalSerialization-Core' ]
 	]
 ]

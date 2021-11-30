@@ -4,3 +4,8 @@ Extension { #name : #Object }
 Object >> asCoalGenericObjectForPrinting [
 	^ self
 ]
+
+{ #category : #'*CoalSerialization-Core' }
+Object >> isCoalGenericAggregate [
+	^ false
+]

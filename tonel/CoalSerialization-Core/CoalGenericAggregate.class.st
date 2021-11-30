@@ -35,10 +35,15 @@ CoalGenericAggregate >> at: fieldName [
 	^ slots at: (type slotOfFieldNamed: fieldName)
 ]
 
+{ #category : #testing }
+CoalGenericAggregate >> isCoalGenericAggregate [
+	^ true
+]
+
 { #category : #printing }
 CoalGenericAggregate >> printOn: aStream [
-	super printOn: aStream.
-	(type isNil or: [slots isNil]) ifTrue: [ ^ self ].
+	(type isNil or: [slots isNil]) ifTrue: [ ^ super printOn: aStream. ].
+	aStream nextPutAll: type name.
 	self asFieldNameValueAssociationListForPrinting printOn: aStream
 ]
 
